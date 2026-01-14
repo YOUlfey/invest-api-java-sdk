@@ -1,7 +1,7 @@
 package ru.ttech.piapi.strategy.candle.mapper;
 
 import org.ta4j.core.Bar;
-import org.ta4j.core.BaseBar;
+import org.ta4j.core.bars.TimeBarBuilder;
 import org.ta4j.core.num.DecimalNum;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 import ru.tinkoff.piapi.contract.v1.HistoricCandle;
@@ -22,9 +22,10 @@ public class BarMapper {
     var startTime = candle.getTime();
     var period = PeriodMapper.getTimePeriod(startTime, candle.getInterval());
     var endTime = startTime.plusMinutes(period.toMinutes()).atZone(ZoneOffset.UTC);
-    return BaseBar.builder()
+    return new TimeBarBuilder()
+      .beginTime(startTime.toInstant(ZoneOffset.UTC))
+      .endTime(endTime.toInstant())
       .timePeriod(period)
-      .endTime(endTime)
       .openPrice(DecimalNum.valueOf(candle.getOpen()))
       .closePrice(DecimalNum.valueOf(candle.getClose()))
       .lowPrice(DecimalNum.valueOf(candle.getLow()))
@@ -37,9 +38,10 @@ public class BarMapper {
     var startTime = TimeMapper.timestampToLocalDateTime(candle.getTime());
     var period = PeriodMapper.getTimePeriod(startTime, interval);
     var endTime = startTime.plusMinutes(period.toMinutes()).atZone(ZoneOffset.UTC);
-    return BaseBar.builder()
+    return new TimeBarBuilder()
+      .beginTime(startTime.toInstant(ZoneOffset.UTC))
+      .endTime(endTime.toInstant())
       .timePeriod(period)
-      .endTime(endTime)
       .openPrice(DecimalNum.valueOf(NumberMapper.quotationToBigDecimal(candle.getOpen())))
       .closePrice(DecimalNum.valueOf(NumberMapper.quotationToBigDecimal(candle.getClose())))
       .lowPrice(DecimalNum.valueOf(NumberMapper.quotationToBigDecimal(candle.getLow())))
@@ -51,8 +53,9 @@ public class BarMapper {
   public static Bar mapBarDataWithIntervalToBar(BarData barData, CandleInterval interval) {
     var startTime = TimeHelper.roundFloorStartTime(ZonedDateTime.parse(barData.getStartTime()), interval);
     var endTime = TimeHelper.getEndTime(startTime, interval);
-    return BaseBar.builder()
-      .endTime(endTime)
+    return new TimeBarBuilder()
+      .beginTime(startTime.toInstant())
+      .endTime(endTime.toInstant())
       .timePeriod(Duration.between(startTime, endTime))
       .openPrice(DecimalNum.valueOf(barData.getOpen()))
       .highPrice(DecimalNum.valueOf(barData.getHigh()))

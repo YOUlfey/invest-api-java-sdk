@@ -16,7 +16,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <maven.compiler.release>11</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <org.ta4j.version>0.17</org.ta4j.version>
+        <org.ta4j.version>0.22.0</org.ta4j.version>
         <org.apache.commons.csv.version>1.13.0</org.apache.commons.csv.version>
         <org.apache.commons.compress.version>1.27.1</org.apache.commons.compress.version>
         <com.squareup.okhttp3.version>4.12.0</com.squareup.okhttp3.version>

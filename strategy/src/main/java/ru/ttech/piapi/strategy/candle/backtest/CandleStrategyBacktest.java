@@ -7,7 +7,8 @@ import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeriesBuilder;
 import org.ta4j.core.analysis.cost.ZeroCostModel;
 import org.ta4j.core.backtest.BarSeriesManager;
-import org.ta4j.core.num.DecimalNum;
+import org.ta4j.core.bars.TimeBarBuilderFactory;
+import org.ta4j.core.num.DecimalNumFactory;
 import ru.ttech.piapi.strategy.candle.mapper.BarMapper;
 
 import java.util.List;
@@ -35,7 +36,9 @@ public class CandleStrategyBacktest {
     List<Bar> bars = StreamSupport.stream(barsData.spliterator(), false)
       .map(barData -> BarMapper.mapBarDataWithIntervalToBar(barData, config.getCandleInterval()))
       .collect(Collectors.toList());
-    BarSeries barSeries = new BaseBarSeriesBuilder().withNumTypeOf(DecimalNum.class)
+    BarSeries barSeries = new BaseBarSeriesBuilder()
+      .withNumFactory(DecimalNumFactory.getInstance())
+      .withBarBuilderFactory(new TimeBarBuilderFactory())
       .withBars(bars)
       .build();
     logger.info("Backtest started...");

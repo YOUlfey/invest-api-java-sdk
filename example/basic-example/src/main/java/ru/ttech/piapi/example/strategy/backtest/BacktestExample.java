@@ -2,15 +2,11 @@ package ru.ttech.piapi.example.strategy.backtest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.ta4j.core.AnalysisCriterion;
-import org.ta4j.core.BarSeries;
-import org.ta4j.core.BaseStrategy;
-import org.ta4j.core.Rule;
-import org.ta4j.core.Strategy;
+import org.ta4j.core.*;
 import org.ta4j.core.analysis.cost.LinearTransactionCostModel;
 import org.ta4j.core.backtest.TradeOnCurrentCloseModel;
-import org.ta4j.core.criteria.pnl.ProfitCriterion;
-import org.ta4j.core.indicators.EMAIndicator;
+import org.ta4j.core.criteria.pnl.NetProfitCriterion;
+import org.ta4j.core.indicators.averages.EMAIndicator;
 import org.ta4j.core.indicators.helpers.ClosePriceIndicator;
 import org.ta4j.core.rules.CrossedDownIndicatorRule;
 import org.ta4j.core.rules.CrossedUpIndicatorRule;
@@ -52,7 +48,7 @@ public class BacktestExample {
         .setTradeFeeModel(new LinearTransactionCostModel(0.003))
         .setExecutorService(executorService)
         .setStrategyAnalysis(barSeriesManager -> {
-          AnalysisCriterion criterion = new ProfitCriterion();
+          AnalysisCriterion criterion = new NetProfitCriterion();
           var barSeries = barSeriesManager.getBarSeries();
           var tradingRecord = barSeriesManager.run(tradingStrategy.apply(barSeries));
           var profit = criterion.calculate(barSeries, tradingRecord);

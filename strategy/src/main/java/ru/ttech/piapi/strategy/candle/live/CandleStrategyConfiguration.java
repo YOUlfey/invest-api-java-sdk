@@ -6,7 +6,8 @@ import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeriesBuilder;
 import org.ta4j.core.Strategy;
-import org.ta4j.core.num.DecimalNum;
+import org.ta4j.core.bars.TimeBarBuilderFactory;
+import org.ta4j.core.num.DecimalNumFactory;
 import ru.tinkoff.piapi.contract.v1.CandleInstrument;
 import ru.tinkoff.piapi.contract.v1.GetCandlesRequest;
 
@@ -206,7 +207,8 @@ public class CandleStrategyConfiguration {
           instrument -> (BarSeries) new BaseBarSeriesBuilder()
             .withName(instrument.getInstrumentId())
             .withMaxBarCount(warmupLength)
-            .withNumTypeOf(DecimalNum.class)
+            .withNumFactory(DecimalNumFactory.getInstance())
+            .withBarBuilderFactory(new TimeBarBuilderFactory())
             .build()
           ));
       var strategiesMap = strategyConstructors.entrySet().stream()

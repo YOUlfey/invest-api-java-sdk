@@ -2,16 +2,11 @@ package ru.ttech.piapi.example.strategy.backtest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.ta4j.core.AnalysisCriterion;
-import org.ta4j.core.BarSeries;
-import org.ta4j.core.BaseStrategy;
-import org.ta4j.core.Rule;
-import org.ta4j.core.Strategy;
-import org.ta4j.core.TradingRecord;
+import org.ta4j.core.*;
 import org.ta4j.core.analysis.cost.LinearTransactionCostModel;
 import org.ta4j.core.backtest.TradeOnCurrentCloseModel;
-import org.ta4j.core.criteria.pnl.ProfitLossPercentageCriterion;
-import org.ta4j.core.indicators.EMAIndicator;
+import org.ta4j.core.criteria.pnl.NetProfitLossPercentageCriterion;
+import org.ta4j.core.indicators.averages.EMAIndicator;
 import org.ta4j.core.indicators.helpers.ClosePriceIndicator;
 import org.ta4j.core.reports.PerformanceReportGenerator;
 import org.ta4j.core.reports.PositionStatsReportGenerator;
@@ -81,7 +76,7 @@ public class ChooseBestStrategyExample {
         .setTradeFeeModel(new LinearTransactionCostModel(commissionFee))
         .setExecutorService(executorService)
         .setStrategyAnalysis(barSeriesManager -> {
-          AnalysisCriterion criterion = new ProfitLossPercentageCriterion();
+          AnalysisCriterion criterion = new NetProfitLossPercentageCriterion();
           var barSeries = barSeriesManager.getBarSeries();
           var strategies = strategiesFunctions.stream()
             .map(strategy -> strategy.apply(barSeries))
