@@ -64,11 +64,11 @@ public class ChooseBestStrategyExample {
             .filter(shortEma -> shortEma < longEmaPeriod)
             .map(shortEmaPeriod -> createSimpleStrategy(shortEmaPeriod, longEmaPeriod))
         )
-        .collect(Collectors.toList());
+        .toList();
 
     var backtest = backtestStrategyFactory.newCandleStrategyBacktest(
       CandleStrategyBacktestConfiguration.builder()
-        .setInstrumentId(instrumentId)
+        .setInstrumentIds(List.of(instrumentId))
         .setCandleInterval(candleInterval)
         .setFrom(from)
         .setTo(to)

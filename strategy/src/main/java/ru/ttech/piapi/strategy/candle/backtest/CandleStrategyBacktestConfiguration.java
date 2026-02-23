@@ -6,12 +6,13 @@ import org.ta4j.core.backtest.TradeExecutionModel;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
 public class CandleStrategyBacktestConfiguration {
 
-  private final String instrumentId;
+  private final List<String> instrumentIds;
   private final CandleInterval candleInterval;
   private final CostModel tradeFeeModel;
   private final TradeExecutionModel tradeExecutionModel;
@@ -21,7 +22,7 @@ public class CandleStrategyBacktestConfiguration {
   private final Consumer<BarSeriesManager> strategyAnalysis;
 
   private CandleStrategyBacktestConfiguration(
-    String instrumentId,
+    List<String> instrumentIds,
     CandleInterval candleInterval,
     CostModel tradeFeeModel,
     TradeExecutionModel tradeExecutionModel,
@@ -30,7 +31,7 @@ public class CandleStrategyBacktestConfiguration {
     LocalDate to,
     Consumer<BarSeriesManager> strategyAnalysis
   ) {
-    this.instrumentId = instrumentId;
+    this.instrumentIds = instrumentIds;
     this.candleInterval = candleInterval;
     this.tradeFeeModel = tradeFeeModel;
     this.tradeExecutionModel = tradeExecutionModel;
@@ -40,8 +41,8 @@ public class CandleStrategyBacktestConfiguration {
     this.strategyAnalysis = strategyAnalysis;
   }
 
-  public String getInstrumentId() {
-    return instrumentId;
+  public List<String> getInstrumentIds() {
+    return instrumentIds;
   }
 
   public CandleInterval getCandleInterval() {
@@ -78,7 +79,7 @@ public class CandleStrategyBacktestConfiguration {
 
   public static class Builder {
 
-    private String instrumentId;
+    private List<String> instrumentIds;
     private CandleInterval candleInterval;
     private CostModel tradeFeeModel;
     private TradeExecutionModel tradeExecutionModel;
@@ -87,8 +88,8 @@ public class CandleStrategyBacktestConfiguration {
     private LocalDate to;
     private Consumer<BarSeriesManager> strategyAnalysis;
 
-    public Builder setInstrumentId(String instrumentId) {
-      this.instrumentId = instrumentId;
+    public Builder setInstrumentIds(List<String> instrumentIds) {
+      this.instrumentIds = instrumentIds;
       return this;
     }
 
@@ -135,7 +136,7 @@ public class CandleStrategyBacktestConfiguration {
         throw new IllegalArgumentException("'from' should be before 'to'!");
       }
       return new CandleStrategyBacktestConfiguration(
-        instrumentId, candleInterval, tradeFeeModel, tradeExecutionModel, executorService, from, to, strategyAnalysis
+        instrumentIds, candleInterval, tradeFeeModel, tradeExecutionModel, executorService, from, to, strategyAnalysis
       );
     }
   }

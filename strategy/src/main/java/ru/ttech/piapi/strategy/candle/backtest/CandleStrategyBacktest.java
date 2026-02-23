@@ -30,22 +30,28 @@ public class CandleStrategyBacktest {
   }
 
   public void run() {
-    var barsData = barsLoader.loadBars(
-      config.getInstrumentId(), config.getCandleInterval(), config.getFrom(), config.getTo()
-    );
-    List<Bar> bars = StreamSupport.stream(barsData.spliterator(), false)
-      .map(barData -> BarMapper.mapBarDataWithIntervalToBar(barData, config.getCandleInterval()))
-      .collect(Collectors.toList());
-    BarSeries barSeries = new BaseBarSeriesBuilder()
-      .withNumFactory(DecimalNumFactory.getInstance())
-      .withBarBuilderFactory(new TimeBarBuilderFactory())
-      .withBars(bars)
-      .build();
     logger.info("Backtest started...");
+    for (String instrumentId : config.getInstrumentIds()) {
+      var barsData = barsLoader.loadBars(
+        instrumentId, config.getCandleInterval(), config.getFrom(), config.getTo()
+      );
+      List<Bar> bars = StreamSupport.stream(barsData.spliterator(), false)
+        .map(barData -> BarMapper.mapBarDataWithIntervalToBar(barData, config.getCandleInterval()))
+        .collect(Collectors.toList());
+      BarSeries barSeries = new BaseBarSeriesBuilder()
+        .withNumFactory(DecimalNumFactory.getInstance())
+        .withBarBuilderFactory(new TimeBarBuilderFactory())
+        .withBars(bars)
+        .build();
+      doSingleRun(barSeries);
+    }
+    logger.info("Backtest finished!");
+  }
+
+  private void doSingleRun(BarSeries series) {
     var tradeFeeModel = config.getTradeFeeModel();
     var tradeExecutionModel = config.getTradeExecutionModel();
-    var barSeriesManager = new BarSeriesManager(barSeries, tradeFeeModel, new ZeroCostModel(), tradeExecutionModel);
+    var barSeriesManager = new BarSeriesManager(series, tradeFeeModel, new ZeroCostModel(), tradeExecutionModel);
     config.getStrategyAnalysis().accept(barSeriesManager);
-    logger.info("Backtest finished!");
   }
 }

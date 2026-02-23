@@ -16,6 +16,7 @@ import ru.ttech.piapi.strategy.BacktestStrategyFactory;
 import ru.ttech.piapi.strategy.candle.backtest.CandleStrategyBacktestConfiguration;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
 
@@ -40,7 +41,7 @@ public class BacktestExample {
 
     var backtest = backtestStrategyFactory.newCandleStrategyBacktest(
       CandleStrategyBacktestConfiguration.builder()
-        .setInstrumentId("e6123145-9665-43e0-8413-cd61b8aa9b13")
+        .setInstrumentIds(List.of("e6123145-9665-43e0-8413-cd61b8aa9b13"))
         .setCandleInterval(CandleInterval.CANDLE_INTERVAL_30_MIN)
         .setFrom(LocalDate.of(2018, 1, 15))
         .setTo(LocalDate.of(2025, 2, 16))
